@@ -27,7 +27,10 @@ ddpMap01 <- leaflet() %>% addTiles()
 ddpMap01 <- ddpMap01 %>% addCircleMarkers(lat = matthewLocation$lat, lng = matthewLocation$lng,
                                           radius = 5, color = "blue", weight = 4,
                                           fillColor = "red", fillOpacity = 1,
-                                          popup = matthewLocation$date)
+                                          popup = matthewLocation$date) %>% 
+  addPolylines(lat = matthewLocation$lat, lng = matthewLocation$lng, 
+               weight = 2)
+
 ddpMap01
 
 
