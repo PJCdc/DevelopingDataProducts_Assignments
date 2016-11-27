@@ -70,22 +70,22 @@ dCLoseSymbols <- gather(dCLoseSymbols, index, price) %>% mutate(Date = rep(dateC
 dailyReturnsAMZN <- as.data.frame(periodReturn(AMZN,period='daily'), row.names = FALSE)
 colnames(dailyReturnsAMZN) <- c("dReturnsAMZN")
 dailyReturnsAMZN <- mutate(dailyReturnsAMZN, cReturnAMZN = cumsum(dReturnsAMZN))
-dailyReturnsAMZN <- transmute(dailyReturnsAMZN, AMZN = 100 * cReturnAMZN)
+dailyReturnsAMZN <- transmute(dailyReturnsAMZN, cReturnAMZN = cReturnAMZN)
 
 dailyReturnsDJI <- as.data.frame(periodReturn(DJI,period='daily'), row.names = FALSE)
 colnames(dailyReturnsDJI) <- c("dReturnsDJI")
 dailyReturnsDJI <- mutate(dailyReturnsDJI, cReturnDJI = cumsum(dReturnsDJI))
-dailyReturnsDJI <- transmute(dailyReturnsDJI, DJI = 100 * cReturnDJI)
+dailyReturnsDJI <- transmute(dailyReturnsDJI, cReturnDJI = cReturnDJI)
 
 dailyReturnsNAS <- as.data.frame(periodReturn(IXIC,period='daily'), row.names = FALSE)
 colnames(dailyReturnsNAS) <- c("dReturnsNAS")
 dailyReturnsNAS <- mutate(dailyReturnsNAS, cReturnNAS = cumsum(dReturnsNAS))
-dailyReturnsNAS <- transmute(dailyReturnsNAS, NAS = 100 * cReturnNAS)
+dailyReturnsNAS <- transmute(dailyReturnsNAS, cReturnNAS = cReturnNAS)
 
 dailyReturnsSP <- as.data.frame(periodReturn(GSPC,period='daily'), row.names = FALSE)
 colnames(dailyReturnsSP) <- c("dReturnsSP")
 dailyReturnsSP <- mutate(dailyReturnsSP, cReturnSP = cumsum(dReturnsSP))
-dailyReturnsSP <- transmute(dailyReturnsSP, SP = 100 * cReturnSP)
+dailyReturnsSP <- transmute(dailyReturnsSP, cReturnSP = cReturnSP)
 
 dReturnsSymbols <- cbind(dailyReturnsAMZN, dailyReturnsDJI, dailyReturnsNAS, dailyReturnsSP)
 dReturnsSymbols <- gather(dReturnsSymbols, index, returns) %>% mutate(Date = rep(dateCLose$Date,4))

@@ -30,7 +30,13 @@ symbols <- c("AMZN", "^DJI", "^IXIC", "^GSPC")
 
 load("plotlyStocks.RData")
 
+ya <- list(title = "Returns (%)")
+xa <- list(title = "Date")
 pltReturns <- plot_ly(dReturnsSymbols, x = ~Date, y = ~returns)
 add_lines(pltReturns, color = ~index)
+
+# layout(xaxis = xa, yaxis = ya)
+
+# layout(pltReturns, yaxis = list(title("Returns (%)")))
 
 ```
