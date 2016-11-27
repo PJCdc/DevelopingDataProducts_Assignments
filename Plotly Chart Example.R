@@ -91,3 +91,4 @@ dReturnsSymbols <- cbind(dailyReturnsAMZN, dailyReturnsDJI, dailyReturnsNAS, dai
 dReturnsSymbols <- gather(dReturnsSymbols, index, returns) %>% mutate(Date = rep(dateCLose$Date,4))
 
 save(dCLoseSymbols, dReturnsSymbols, file = "plotlyStocks.RData")
+
