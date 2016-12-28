@@ -74,179 +74,84 @@ symbols <- rbind(stockSymbols, indexSymbols)
 
 getSymbols(symbols$Ticker, from=from, to=to, src="yahoo", adjust=TRUE)
 
-# Create data.table for each stock
-# AMZN
+# Create data.table for each stock and index
 
-dtAMZNprices <- as.data.table(AMZN)
-dtAMZNprices[,ID := "AMZN"]
-oldColNames <- names(dtAMZNprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtAMZNprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtAMZNprices, colOrder)
+testTick <- gsub("\\^", "", symbols$Ticker)
+testTick <- c("AMZN", "IBM")
 
-dtAMZNprices[, `:=` (Volume = NULL,
-                     Adjusted = NULL)]
+tickerList <- character()
+tickerDTlist <- list()
 
-dRet <- as.vector(periodReturn(AMZN, period='daily')$daily.returns)
+for(tick in testTick) {
+  # tickN <- sub("\\^", "", tick)
+  tickSymbol <- paste0("dt", tick, "prices")
+  tickerList <- c(tickerList,tickSymbol)
+  
+  assign(tickSymbol, as.data.table(eval(as.name(tick))))
+  eval(as.name(tickSymbol))[,ID := tick]
+  oldColNames <- names(eval(as.name(tickSymbol)))
+  newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
+  setnames(eval(as.name(tickSymbol)), oldColNames, newColNames)
+  colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
+  setcolorder(eval(as.name(tickSymbol)), colOrder)
 
-dtAMZNprices[,`:=` (dailyRet = dRet,
-                    cumRet = cumsum(dRet),
-                    sma20 = SMA(Close,20),
-                    sma50 = SMA(Close,50),
-                    ema20 = EMA(Close,20),
-                    ema50 = EMA(Close,50))]
-              
+  eval(as.name(tickSymbol))[, `:=` (Volume = NULL,
+                       Adjusted = NULL)]
+  
 
-#IBM
-
-dtIBMprices <- as.data.table(IBM)
-dtIBMprices[,ID := "IBM"]
-oldColNames <- names(dtIBMprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtIBMprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtIBMprices, colOrder)
-
-dtIBMprices[, `:=` (Volume = NULL,
-                     Adjusted = NULL)]
-
-dRet <- as.vector(periodReturn(IBM, period='daily')$daily.returns)
-
-dtIBMprices[,`:=` (dailyRet = dRet,
-                    cumRet = cumsum(dRet),
-                    sma20 = SMA(Close,20),
-                    sma50 = SMA(Close,50),
-                    ema20 = EMA(Close,20),
-                    ema50 = EMA(Close,50))]
+}
 
 
-# MSFT
+lstPriceData <- lapply(tickerList, function(x) eval(as.name(x)))
+dtPriceData <- rbindlist(lstPriceData)
 
-dtMSFTprices <- as.data.table(MSFT)
-dtMSFTprices[,ID := "MSFT"]
-oldColNames <- names(dtMSFTprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtMSFTprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtMSFTprices, colOrder)
-
-dtMSFTprices[, `:=` (Volume = NULL,
-                    Adjusted = NULL)]
-
-dRet <- as.vector(periodReturn(MSFT, period='daily')$daily.returns)
-
-dtMSFTprices[,`:=` (dailyRet = dRet,
-                   cumRet = cumsum(dRet),
-                   sma20 = SMA(Close,20),
-                   sma50 = SMA(Close,50),
-                   ema20 = EMA(Close,20),
-                   ema50 = EMA(Close,50))]
+dtPriceData[,Year := year(Date)]
 
 
-#AAPL
+# selection examples:
+tempYear <- "2014"
+pickYear <- as.IDate(tempYear, format = "%Y")
+pickID <- "AMZN"
 
-dtAAPLprices <- as.data.table(AAPL)
-dtAAPLprices[,ID := "AAPL"]
-oldColNames <- names(dtAAPLprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtAAPLprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtAAPLprices, colOrder)
+dtSelect <- data.table(Year = year(pickYear), ID = pickID)
+dtPlotSelection <- dtPriceData[dtSelect, on = c("Year", "ID")]
 
-dtAAPLprices[, `:=` (Volume = NULL,
-                     Adjusted = NULL)]
+# Compute moving averages, returns
+tempID <- dtPlotSelection[,unique(ID)]
+tempClose <- as.xts(dtPlotSelection[,.(Date,Close)])
 
-dRet <- as.vector(periodReturn(AAPL, period='daily')$daily.returns)
+dRet <- as.vector(periodReturn(tempClose, period='daily')$daily.returns)
 
-dtAAPLprices[,`:=` (dailyRet = dRet,
+dtPlotSelection[,`:=` (dailyRet = dRet,
                     cumRet = cumsum(dRet),
                     sma20 = SMA(Close,20),
                     sma50 = SMA(Close,50),
                     ema20 = EMA(Close,20),
                     ema50 = EMA(Close,50))]
 
+# Plot Example
 
-# Create data.table for each index
+# , hoverinfo = "none"
 
-# DJI
-
-dtDJIprices <- as.data.table(DJI)
-dtDJIprices[,ID := "DJI"]
-oldColNames <- names(dtDJIprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtDJIprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtDJIprices, colOrder)
-
-dtDJIprices[, `:=` (Volume = NULL,
-                     Adjusted = NULL)]
-
-dRet <- as.vector(periodReturn(DJI, period='daily')$daily.returns)
-
-dtDJIprices[,`:=` (dailyRet = dRet,
-                    cumRet = cumsum(dRet),
-                    sma20 = SMA(Close,20),
-                    sma50 = SMA(Close,50),
-                    ema20 = EMA(Close,20),
-                    ema50 = EMA(Close,50))]
+plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
+        colors = c("red", "forestgreen"), hoverinfo = "none") %>%
+  add_segments(y = ~Low, yend = ~High, size = I(1), color = ~Close > Open) %>%
+  add_segments(y = ~Open, yend = ~Close, size = I(6), color = ~Close > Open) %>%
+  add_lines(y = ~sma20, color = I("orange")) %>% 
+  add_lines(y = ~sma50, color = I("blue")) %>% 
+  layout(showlegend = FALSE, yaxis = list(title = "Price"))
 
 
-# NAS
-
-dtNASprices <- as.data.table(IXIC)
-dtNASprices[,ID := "NAS"]
-oldColNames <- names(dtNASprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtNASprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtNASprices, colOrder)
-
-dtNASprices[, `:=` (Volume = NULL,
-                    Adjusted = NULL)]
-
-dRet <- as.vector(periodReturn(IXIC, period='daily')$daily.returns)
-
-dtNASprices[,`:=` (dailyRet = dRet,
-                   cumRet = cumsum(dRet),
-                   sma20 = SMA(Close,20),
-                   sma50 = SMA(Close,50),
-                   ema20 = EMA(Close,20),
-                   ema50 = EMA(Close,50))]
 
 
-# SP
 
-dtSPprices <- as.data.table(GSPC)
-dtSPprices[,ID := "SP"]
-oldColNames <- names(dtSPprices)
-newColNames <- c("Date", "Open", "High", "Low", "Close", "Volume", "Adjusted", "ID")
-setnames(dtSPprices, oldColNames, newColNames)
-colOrder <- c("Date", "ID","Open", "High", "Low", "Close", "Volume", "Adjusted")
-setcolorder(dtSPprices, colOrder)
-
-dtSPprices[, `:=` (Volume = NULL,
-                    Adjusted = NULL)]
-
-dRet <- as.vector(periodReturn(GSPC, period='daily')$daily.returns)
-
-dtSPprices[,`:=` (dailyRet = dRet,
-                   cumRet = cumsum(dRet),
-                   sma20 = SMA(Close,20),
-                   sma50 = SMA(Close,50),
-                   ema20 = EMA(Close,20),
-                   ema50 = EMA(Close,50))]
-
-# length(names(dtAMZNprices))
-
-
-temp <- rbind(dtAMZNprices, dtIBMprices)
-temp <- rbind(temp, dtMSFTprices)
-temp <- rbind(temp, dtAAPLprices)
-temp <- rbind(temp, dtDJIprices)
-temp <- rbind(temp, dtNASprices)
-temp <- rbind(temp, dtSPprices)
-
+# dtSelect <- data.table(ID = c("AMZN", "IBM"), variable = "Close")
+# 
+# dtPricesLong[year(Date) == "2008" & ID == "AMZN" & variable == "Close",]
+# dtPricesLong[month(Date) == "1" & ID == "AMZN" & variable == "dailyRet",]
+# 
+# dtPricesLong[dtSelect, on = c("ID", "variable")]
+# dtPricesLong[dtSelect, on = c("ID")]
 
 dtPricesLong <- melt(temp, id.vars = c("Date", "ID"), measure.vars = 3:12)
 
