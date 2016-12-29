@@ -133,13 +133,17 @@ dtPlotSelection[,`:=` (dailyRet = dRet,
 
 # , hoverinfo = "none"
 
+dtPlotSelection[, hText := paste0("Open: ", Open,"<br> ", "Close: ", Close)]
+
 plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
-        colors = c("red", "forestgreen"), hoverinfo = "none") %>%
+        colors = c("red", "forestgreen"), text = ~hText, hoverinfo = 'none') %>%
   add_segments(y = ~Low, yend = ~High, size = I(1), color = ~Close > Open) %>%
-  add_segments(y = ~Open, yend = ~Close, size = I(6), color = ~Close > Open) %>%
+  add_segments(y = ~Open, yend = ~Close, size = I(4), color = ~Close > Open) %>%
   add_lines(y = ~sma20, color = I("orange")) %>% 
   add_lines(y = ~sma50, color = I("blue")) %>% 
-  layout(showlegend = FALSE, yaxis = list(title = "Price"))
+  add_lines(y = ~Close,  opacity = 0, hoverinfo = 'x+text' , showlegend = FALSE)
+  layout(showlegend = FALSE, yaxis = list(title = "Price")) %>% 
+  style(hoverinfo = text, text = ~hText, traces = 1)
 
 
 
