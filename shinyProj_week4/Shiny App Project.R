@@ -1,7 +1,7 @@
 
-"C:\Users\TCarroll\OneDrive - TMC\GitRepos\DevelopingDataProducts_Assignments"
-setwd("C:/Users/TCarroll/OneDrive - TMC/GitRepos/DevelopingDataProducts_Assignments")
-getwd()
+# "C:\Users\TCarroll\OneDrive - TMC\GitRepos\DevelopingDataProducts_Assignments"
+# setwd("C:/Users/TCarroll/OneDrive - TMC/GitRepos/DevelopingDataProducts_Assignments")
+# getwd()
 
 
 library(quantmod)
@@ -109,9 +109,15 @@ dtPriceData[,Year := year(Date)]
 
 
 # selection examples:
-tempYear <- "2014"
+tempYear <- "2010"
 pickYear <- as.IDate(tempYear, format = "%Y")
 pickID <- "AMZN"
+pickMAtype <- "ema"
+slowMA <- paste0(pickMAtype, "20")
+fastMA <- paste0(pickMAtype, "50")
+pltTitle <- filter(stockSymbols, Ticker == pickID)
+pltTitle <- paste0(pltTitle$Display, " Price Chart for ", tempYear)
+
 
 dtSelect <- data.table(Year = year(pickYear), ID = pickID)
 dtPlotSelection <- dtPriceData[dtSelect, on = c("Year", "ID")]
@@ -129,25 +135,36 @@ dtPlotSelection[,`:=` (dailyRet = dRet,
                     ema20 = EMA(Close,20),
                     ema50 = EMA(Close,50))]
 
+
 # Plot Example
 
-# , hoverinfo = "none"
+# formatC(x, digits = 2, format = "f")
+# sprintf("%.2f", pi)
 
-dtPlotSelection[, hText := paste0("Open: ", Open,"<br> ", "Close: ", Close)]
+
+dtPlotSelection[, hText := paste0("Open: ", sprintf("%.2f",Open)," / ", 
+                                  "High: ", sprintf("%.2f",High), "<br>",
+                                  "Low: ", sprintf("%.2f",Low), " / ", 
+                                  "Close: ",sprintf("%.2f",Close), "<br>",
+                                  fastMA, ": ", sprintf("%.2f",eval(as.name(fastMA))), " / ",
+                                  slowMA, ": ", sprintf("%.2f",eval(as.name(slowMA))))]
+
 
 plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
         colors = c("red", "forestgreen"), text = ~hText, hoverinfo = 'none') %>%
   add_segments(y = ~Low, yend = ~High, size = I(1), color = ~Close > Open) %>%
   add_segments(y = ~Open, yend = ~Close, size = I(4), color = ~Close > Open) %>%
-  add_lines(y = ~sma20, color = I("orange")) %>% 
-  add_lines(y = ~sma50, color = I("blue")) %>% 
-  add_lines(y = ~Close,  opacity = 0, hoverinfo = 'x+text' , showlegend = FALSE)
-  layout(showlegend = FALSE, yaxis = list(title = "Price")) %>% 
-  style(hoverinfo = text, text = ~hText, traces = 1)
+  add_lines(y = ~eval(as.name(fastMA)), color = I("orange"), name = "Fast MA - 20 bars") %>% 
+  add_lines(y = ~eval(as.name(slowMA)), color = I("blue"), name = "Slow MA - 50 bars") %>% 
+  add_lines(y = ~Close,  opacity = 0, hoverinfo = 'x+text' , showlegend = FALSE) %>% 
+  layout(title = pltTitle, showlegend = TRUE, yaxis = list(title = "Price"))
 
 
 
 
+  
+  
+  
 
 # dtSelect <- data.table(ID = c("AMZN", "IBM"), variable = "Close")
 # 
