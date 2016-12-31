@@ -52,7 +52,7 @@ lstYear <- seq(year(from), year(to))
 #              "TLT" #iShares 20+ year Bonds
 # )
 
-# Prepare data file of stock data
+# symbols <- c("AMZN", "^DJI", "^IXIC", "^GSPC")
 
 stockID <- c("AMZN", "IBM", "MSFT", "AAPL")
 stockName <- c("Amazon", "IBM", "Microsoft", "Apple")
@@ -78,11 +78,13 @@ getSymbols(symbols$Ticker, from=from, to=to, src="yahoo", adjust=TRUE)
 # Create data.table for each stock and index
 
 testTick <- gsub("\\^", "", symbols$Ticker)
+testTick <- c("AMZN", "IBM")
 
 tickerList <- character()
 tickerDTlist <- list()
 
 for(tick in testTick) {
+  # tickN <- sub("\\^", "", tick)
   tickSymbol <- paste0("dt", tick, "prices")
   tickerList <- c(tickerList,tickSymbol)
   
@@ -105,8 +107,6 @@ lstPriceData <- lapply(tickerList, function(x) eval(as.name(x)))
 dtPriceData <- rbindlist(lstPriceData)
 
 dtPriceData[,Year := year(Date)]
-
-# dtPriceData is data file to geneate stock chart
 
 
 # selection examples:
@@ -151,8 +151,8 @@ dtPlotSelection[, hText := paste0("Open: ", sprintf("%.2f",Open)," / ",
                                   slowMA, ": ", sprintf("%.2f",eval(as.name(slowMA))))]
 
 
-plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
-        colors = c("red", "forestgreen"), text = ~hText, hoverinfo = 'none') %>%
+pChart <- plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
+                  colors = c("red", "forestgreen"), text = ~hText, hoverinfo = 'none') %>%
   add_segments(y = ~Low, yend = ~High, size = I(1), color = ~Close > Open) %>%
   add_segments(y = ~Open, yend = ~Close, size = I(4), color = ~Close > Open) %>%
   add_lines(y = ~eval(as.name(fastMA)), color = I("orange"), name = "Fast MA - 20 bars") %>% 
@@ -164,10 +164,13 @@ plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
 
 
 # Save data for App to load  
-save(from, to,
-     lstYear,
+save(lstYear,
+     stockSymbols,
+     indexSymbols,
      symbols, 
-     dtPriceData,
+     dCLoseSymbols, 
+     dReturnsSymbols,
+     pChart,
      file = "plotlyStocks.RData")
 
 load(file = "plotlyStocks.RData")  

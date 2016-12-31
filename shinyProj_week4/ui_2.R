@@ -10,6 +10,16 @@
 library(shiny)
 library(shinyBS)
 load(file = "plotlyStocks.RData")
+lstYear <- c("2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016")
+
+# Define UI for application that draws a histogram
+# "Average Close" = "avgClose")
+# p("Indicator Descriptions"),
+# p("Average over a 50-day window"),
+# p("Average over a 20-day window"),
+# tagList(tags$ul(),
+#         tags$li("50-SMA"),
+#         tags$li("20-SMA"))
 
 
 shinyUI(
@@ -50,9 +60,7 @@ shinyUI(
       
     ),
     
-    h3("Insert Chart Here"),
-    
-    plotlyOutput(("stockPlot")
+    h3("Insert Chart Here")
     
     
     
