@@ -8,7 +8,9 @@ library(dplyr)
 library(data.table)
 library(dtplyr)
 
-from="2008-01-01"
-to="2016-11-22"
-lstYear <- seq(year(from), year(to))
+# from="2008-01-01"
+# to="2016-11-22"
+# lstYear <- seq(year(from), year(to))
+
+load(file = "plotlyStocks.RData")
 
