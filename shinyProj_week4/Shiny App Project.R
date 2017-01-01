@@ -15,8 +15,8 @@ library(data.table)
 library(dtplyr)
 
 from="2008-01-01"
-to="2016-11-22"
-lstYear <- seq(year(from), year(to))
+to="2016-12-30"
+lstYear <- sort(seq(year(from), year(to)), decreasing = TRUE)
 
 
 # symbols <- c("XLB", #SPDR Materials sector
@@ -71,6 +71,7 @@ indexSymbols$Display <- paste(indexSymbols$Ticker, " - ", indexSymbols$Name)
 
 
 symbols <- rbind(stockSymbols, indexSymbols)
+symbols <- mutate(symbols, altTicker = gsub("\\^", "", symbols$Ticker))
 
 
 getSymbols(symbols$Ticker, from=from, to=to, src="yahoo", adjust=TRUE)

@@ -7,20 +7,21 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
-library(shinyBS)
-load(file = "plotlyStocks.RData")
+# load(file = "plotlyStocks.RData")
 
 
 shinyUI(
   fluidPage(
-    titlePanel("Interactive Stock Chart"),
+    #titlePanel("Interactive Stock Chart"),
+    h1("Interactive Stock Chart", style = "color: DarkGreen ;"),
+    tags$hr(style = "border-width: 4px; border-color: steelblue;"),
     
+    wellPanel(
     fluidRow(
       column(3,
              selectInput("selectStock",
                          label = "Select Stock / Index:",
-                         choices = stockSymbols$Display,
+                         choices = symbols$Display,
                          # choices = c("AMZN", "GOOGL", "IBM"),
                          selected = "AMZN"),
              
@@ -33,7 +34,7 @@ shinyUI(
       column(3,
              radioButtons("selectSlowMA", "Slow Moving Average:",
                                 choices = c("Simple 50-day Moving Wndow" = "sma50",
-                                            "Weighted 50-day Moving Wndow" = "wma50")
+                                            "Weighted 50-day Moving Wndow" = "ema50")
                                 )
              
              
@@ -42,21 +43,25 @@ shinyUI(
       column(4,
              radioButtons("selectFastMA", "Fast Moving Average:",
                                 choices = c("Simple 20-day Moving Wndow" = "sma20",
-                                            "Weighted 20-day Moving Wndow" = "wma20")
+                                            "Weighted 20-day Moving Wndow" = "ema20")
                                 )
              )
       
       
       
+    )
     ),
     
-    h3("Insert Chart Here"),
+    tags$hr(style = "border-width: 4px; border-color: steelblue;"),
     
-    plotlyOutput(("stockPlot")
+    h3(textOutput("chartTitle"), style = "color: DarkGreen ;"),
     
+    plotlyOutput(("stockChart")
     
+    # steelblue  midnightblue
     
   )
+)
 )
   
 
