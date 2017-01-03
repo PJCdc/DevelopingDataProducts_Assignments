@@ -24,19 +24,6 @@ shinyServer(function(input, output) {
   output$chartTitle <- renderText(pltTitle())
   
   
-  
-  # dtSelect <- reactive({
-  #   dtTemp <- data.table(Year = year(pickYear()), ID = pickID())
-  #   as.character(dtTemp[1,2])
-  #   })
-  
-  # dtSelect <- reactive({
-  #   data.table(Year = year(pickYear()), ID = pickID())
-  # })
-  
-
-    
-    
   dtPlotSelection <- reactive({
     dtSelect <- data.table(Year = year(pickYear()), ID = pickID())
     dtPlotSelection <- dtPriceData[dtSelect, on = c("Year", "ID")] 
@@ -56,10 +43,11 @@ shinyServer(function(input, output) {
                                       "High: ", sprintf("%.2f",High), "<br>",
                                       "Low: ", sprintf("%.2f",Low), " / ",
                                       "Close: ",sprintf("%.2f",Close), "<br>",
-                                      fastMA(), ": ", sprintf("%.2f",eval(as.name(fastMA()))), " / ",
-                                      slowMA(), ": ", sprintf("%.2f",eval(as.name(slowMA()))))]
-
-    # as.character(dtPlotSelection[5,14])
+                                      "Slow MA: ", slowMA(), ": ", sprintf("%.2f",eval(as.name(slowMA()))),
+                                      "<br>",
+                                      "Fast MA: ", fastMA(), ": ", sprintf("%.2f",eval(as.name(fastMA()))))] 
+                                      
+    
     })
   
   
@@ -80,28 +68,6 @@ shinyServer(function(input, output) {
   )
   
   
-  
-  
- #  output$test2 <- renderText(dtPlotSelection())
-  
-  
-  
-  
- 
-   
-   # output$stockChart <- renderPlotly(
-   #   plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
-   #           colors = c("red", "forestgreen"), text = ~hText, hoverinfo = 'none') %>%
-   #     add_segments(y = ~Low, yend = ~High, size = I(1), color = ~Close > Open) %>%
-   #     add_segments(y = ~Open, yend = ~Close, size = I(4), color = ~Close > Open) %>%
-   #     add_lines(y = ~eval(as.name(fastMA)), color = I("orange"), name = "Fast MA - 20 bars") %>%
-   #     add_lines(y = ~eval(as.name(slowMA)), color = I("blue"), name = "Slow MA - 50 bars") %>%
-   #     add_lines(y = ~Close,  opacity = 0, hoverinfo = 'x+text' , showlegend = FALSE) %>%
-   #     layout(title = pltTitle, showlegend = TRUE, yaxis = list(title = "Price"))
-   
-    # )
-  # 
-  # 
 
   
 })
