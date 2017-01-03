@@ -1,0 +1,50 @@
+
+<style>
+
+.footer {
+    color: black; background: white;
+    position: fixed; top: 90%;
+    text-align:left; width:100%;
+}
+
+</style>
+
+<div class="footer" style="margin-top;font-size:80%;"> 
+Footer for every slide </div>
+
+
+
+
+ShinyPresentation
+========================================================
+author: TMC
+date: January 02,  2017
+autosize: true
+transition: zoom
+
+  
+
+First Slide
+========================================================
+type: section
+
+For more details on authoring R presentations please visit <https://support.rstudio.com/hc/en-us/articles/200486468>.
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+Slide With Code
+========================================================
+
+
+```{r}
+summary(cars)
+```
+
+Slide With Plot
+========================================================
+
+```{r, echo=FALSE}
+plot(cars)
+```
