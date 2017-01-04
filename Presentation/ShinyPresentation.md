@@ -1,17 +1,14 @@
-
 <style>
+.exclaim .reveal .state-background {
+  background: PaleGoldenRod ;
+} 
 
-.footer {
-    color: black; background: white;
-    position: fixed; top: 90%;
-    text-align:left; width:100%;
+
+.exclaim .reveal p {
+  color: red;
 }
 
 </style>
-
-<div class="footer" style="margin-top;font-size:80%;"> 
-Footer for every slide </div>
-
 
 
 
@@ -21,18 +18,18 @@ author: TMC
 date: January 02,  2017
 autosize: true
 transition: zoom
+font-family: 'Helvetica'
 
   
 
 First Slide
 ========================================================
-type: section
+type: exclaim
 
-For more details on authoring R presentations please visit <https://support.rstudio.com/hc/en-us/articles/200486468>.
+<img src = "Test2.png";></img>
+***
+- <h3>Text for image</h3>
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
 
 Slide With Code
 ========================================================
