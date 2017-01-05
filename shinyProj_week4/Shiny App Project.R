@@ -108,6 +108,14 @@ dtPriceData <- rbindlist(lstPriceData)
 dtPriceData[,Year := year(Date)]
 
 # dtPriceData is data file to geneate stock chart
+# Save data for App to load  
+save(from, to,
+     lstYear,
+     symbols, 
+     dtPriceData,
+     file = "plotlyStocks.RData")
+
+
 
 
 # selection examples:
@@ -165,13 +173,13 @@ plot_ly(dtPlotSelection, x = ~Date, xend = ~Date,
 
 
 # Save data for App to load  
-save(from, to,
-     lstYear,
-     symbols, 
-     dtPriceData,
-     file = "plotlyStocks.RData")
-
-load(file = "plotlyStocks.RData")  
+# save(from, to,
+#      lstYear,
+#      symbols, 
+#      dtPriceData,
+#      file = "plotlyStocks.RData")
+# 
+# load(file = "plotlyStocks.RData")  
   
 
 # dtSelect <- data.table(ID = c("AMZN", "IBM"), variable = "Close")
