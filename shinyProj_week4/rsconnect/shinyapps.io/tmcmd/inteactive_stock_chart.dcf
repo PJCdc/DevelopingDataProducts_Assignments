@@ -1,0 +1,11 @@
+name: inteactive_stock_chart
+title: Inteactive Stock Chart
+account: tmcmd
+server: shinyapps.io
+appId: 149715
+bundleId: 671920
+url: https://tmcmd.shinyapps.io/inteactive_stock_chart/
+when: 1483753535.0178
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: ui_bu.R

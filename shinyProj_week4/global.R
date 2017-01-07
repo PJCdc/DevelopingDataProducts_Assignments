@@ -1,3 +1,4 @@
+library(MASS)
 library(quantmod)
 library(PerformanceAnalytics)
 library(TTR)
