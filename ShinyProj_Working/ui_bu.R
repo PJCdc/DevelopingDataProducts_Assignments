@@ -47,10 +47,13 @@ shinyUI(
                                 )
              ),
       
-      column(7, em(strong("Simple Moving Average: ")), "All values in the window have equal weight",
+      column(7, div(style = "border: 2px solid steelBlue; padding: 5px;",
+             em(strong("Simple Moving Average: ")), "All values in the window have equal weight",
                        br(),
                        em(strong("Weighted Moving Average: ")), "Recent values in the window
                        carry more weight than early values"
+             )
+             
              )
       
       

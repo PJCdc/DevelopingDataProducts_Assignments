@@ -20,10 +20,10 @@
 </style>
 
 
-Interactive Stock Chart Using Shiny
+Interactive Stock Chart Using Shiny and Plotly R Packages
 ========================================================
 author: TMC
-date: January 02,  2017
+date: January 06,  2017
 autosize: true
 transition: zoom
 font-family: 'Helvetica'
@@ -32,7 +32,7 @@ font-family: 'Helvetica'
 
   
 
-Overview
+Overview (1/2)
 ========================================================
 type: exclaim
 
@@ -49,22 +49,44 @@ superimposed on the price chart.</p>
 
 
 
+Overview (2/2)
+========================================================
+type: exclaim
+left: 40%
+
+<img src = "Test3.png";></img>
+***
+<small>
+The application uses drop down selection boxes when there are several choices the
+user can make.
+
+It also uses radio button selection groups when the user can select only one 
+of the choices provided.
+
+The chart itself is a plotly interactive chart that receives as input the selections make by the user. Hovering over a bar (the day's price data) will display the data for that day:
+- High, Low, Open, Close Prices
+- "Fast" MA value, "Slow" MA value
+</small>
+
+
+
+
 Daily Price Data - Candlestick Chart
 ========================================================
 type: exclaim
 left: 30%
 
 <img src = "Candlestick.png";></img>
-<small><em>Candlesticks are an improvement over a traditional chart. The graphical enhancements
-allow the user to quickly pick up key info on the day's price movement
+<small><em>Candlesticks are an improvement over a traditional chart. The graphical enhancements allow the user to quickly pick up key info on the day's price movement.
 </em></small>
 
 ***
 <small>
 Four prices for each day are plotted as a set of two prices using different graphic elements:
-- The Highest and Lowest price for the day. A thin line is drawn extending from the High price to the Low price
-- The Open and Close prices for the day. A filled rectangle extending between the Open and Close prices
-- The color of the H/L line and the fill of the O/C rectangle is determined as: Green if the Close price is greater than the Open price. Otherwise, the color is Red
+- The Highest and Lowest price for the day. A thin line is drawn extending from the High price to the Low price.
+- The Open and Close prices for the day. A filled rectangle extending between the Open and Close prices.
+- The color of the H/L line and the fill of the O/C rectangle is determined by 
+the relationship of the Open and Close prices: Green if the Close price is greater than the Open price. Otherwise, the color is Red.
 </small>
 
 
